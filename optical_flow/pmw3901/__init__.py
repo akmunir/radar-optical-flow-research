@@ -60,6 +60,8 @@ class PMW3901:
         self._secret_sauce()
 
         product_id, revision = self.get_id()
+        #print(product_id)
+        #print(revision)
         if product_id != 0x49 or revision not in (0x00, 0x01):
             raise RuntimeError(f"Invalid Product ID or Revision for PMW3901: 0x{product_id:02x}/0x{revision:02x}")
         # print("Product ID: {}".format(ID.get_product_id()))

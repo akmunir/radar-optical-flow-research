@@ -20,6 +20,19 @@ SRCS = distance_detection.c \
        $(SDK_DIR)/source/integration/acc_libspi.c \
        $(SDK_DIR)/source/integration/acc_time_integration.c
 
+
+TARGET = distance_detection_iq_data_print
+
+SRCS = distance_detection_iq_data_print.c \
+       $(SDK_DIR)/source/integration/acc_board_xe121.c \
+       $(SDK_DIR)/source/integration/acc_integration_linux.c \
+       $(SDK_DIR)/source/integration/acc_integration_log.c \
+       $(SDK_DIR)/source/integration/acc_libgpiod.c \
+       $(SDK_DIR)/source/integration/acc_libgpiod_v1.c \
+       $(SDK_DIR)/source/integration/acc_libgpiod_v2.c \
+       $(SDK_DIR)/source/integration/acc_libspi.c \
+       $(SDK_DIR)/source/integration/acc_time_integration.c
+
 OBJS = $(SRCS:.c=.o)
 
 LIBS = -L$(LIB_DIR) \

@@ -17,9 +17,9 @@ Press Ctrl+C to exit!
 
 # Pick the right class for the specified breakout
 SensorClass = PMW3901
-flo = SensorClass(spi_port=0, spi_cs=BG_CS_FRONT_BCM)
+flo = SensorClass(spi_port=0, spi_cs=BG_CS_FRONT_BCM)  
 flo.set_rotation(0)
-set_illumination(flo, False)
+set_illumination(flo, True)
 
 tx = 0
 ty = 0
