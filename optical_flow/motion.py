@@ -19,7 +19,7 @@ Press Ctrl+C to exit!
 SensorClass = PMW3901
 flo = SensorClass(spi_port=0, spi_cs=BG_CS_FRONT_BCM)  
 flo.set_rotation(0)
-set_illumination(flo, True)
+set_illumination(flo, False)
 
 tx = 0
 ty = 0

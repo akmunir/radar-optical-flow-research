@@ -221,7 +221,7 @@ int main(int argc, char *argv[])
 	(void)argc;
 	(void)argv;
 	distance_detector_resources_t resources = {0};
-	fileptr = fopen("IQ_data_collection_single_object.txt", "w");
+	fileptr = fopen("IQ_data_collection_waving_hand_3_right_to_left.txt", "w");
 	FILE *fleptr;
 	struct timespec start_time;
 	struct timespec curr_time;
@@ -293,7 +293,7 @@ int main(int argc, char *argv[])
 	struct timespec elapsed = getElapsedTime(start_time, curr_time);
 	double elapsedTime = (elapsed.tv_sec + (double)elapsed.tv_nsec) / 1000000000.0;
 	printf("elapsed seconds: %.6f \n elapsed nanoseconds: %.6f \n", elapsed.tv_sec, (double)elapsed.tv_nsec);
-	while (true)//trueelapsedTime < 10.0)
+	while (elapsedTime < 50.0)
 	{
 		acc_detector_distance_result_t result = {0};
 
@@ -573,4 +573,3 @@ static bool do_detector_get_next(distance_detector_resources_t  *resources,
 
 	return true;
 }
-
