@@ -172,6 +172,7 @@ static void print_iq_data(const acc_config_t        *sensor_config,
 			fprintf(fileptr, "], %" PRIu32 "\n", iq_point_abs);
 
 		}
+		fprintf("Subsweep ID: %i", subsweep_idx);
 	}
 
 	printf("END:Distance(m), [Frame], Amplitude\n");
