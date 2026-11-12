@@ -59,6 +59,7 @@ typedef enum
 #define SENSOR_TIMEOUT_MS (2000U)
 
 FILE *fileptr;
+struct timespec start_time;
 
 typedef struct
 {
@@ -111,7 +112,7 @@ static void print_iq_data(const acc_config_t        *sensor_config,
 	uint16_t sweeps_per_frame = acc_config_sweeps_per_frame_get(sensor_config);
 	uint8_t  num_subsweeps    = acc_config_num_subsweeps_get(sensor_config);
 	uint16_t sweep_length     = processing_metadata->frame_data_length / sweeps_per_frame;
-
+	struct timespec timestamp;
 	printf("BEGIN:Distance(m), [Frame], Amplitude\n");
 	fprintf(fileptr, "BEGIN:Distance(m), [Frame], Amplitude\n" );
 
@@ -158,7 +159,6 @@ static void print_iq_data(const acc_config_t        *sensor_config,
 				/* Print IQ point*/
 				printf("%" PRIi16 "%c%" PRIi16 "i%s", frame[point_offset].real, sign, imag, ((sweep_idx + 1 == sweeps_per_frame) ? "" : ", "));
 				fprintf(fileptr, "%" PRIi16 "%c%" PRIi16 "i%s", frame[point_offset].real, sign, imag, ((sweep_idx + 1 == sweeps_per_frame) ? "" : ", "));
-
 			}
 
 			iq_point_real_acc = iq_point_real_acc / sweeps_per_frame;
@@ -167,16 +167,23 @@ static void print_iq_data(const acc_config_t        *sensor_config,
 			/* Calculate the absolute value of the IQ point */
 			uint32_t iq_point_abs = (uint32_t)sqrt(iq_point_real_acc * iq_point_real_acc + iq_point_imag_acc * iq_point_imag_acc);
 
+			if (clock_gettime(CLOCK_MONOTONIC, &timestamp) != 0) {
+					printf("current timestamp fail");
+				}
+			struct timespec temp = getElapsedTime(start_time, timestamp);
+			double time = temp.tv_sec + (temp.tv_nsec / 1000000000.0);
 			/* Print the point absolute value */
 			printf("], %" PRIu32 "\n", iq_point_abs);
-			fprintf(fileptr, "], %" PRIu32 "\n", iq_point_abs);
+			fprintf(fileptr, "], %" PRIu32  ",  %.9fs" "\n", iq_point_abs, time);
+
 
 		}
-		fprintf("Subsweep ID: %i", subsweep_idx);
+		//fprintf("Subsweep ID: %i", subsweep_idx);
+		fprintf(fileptr, "Sweep end\n");
 	}
 
-	printf("END:Distance(m), [Frame], Amplitude\n");
-	fprintf(fileptr, "END:Distance(m), [Frame], Amplitude\n");
+	printf("END:Distance(m), [Frame], Amplitude, Timestamp\n");
+	fprintf(fileptr, "END:Distance(m), [Frame], Amplitude, Timestamp\n");
 
 }
 
@@ -219,12 +226,16 @@ void initializeOutputFile() {
 
 int main(int argc, char *argv[])
 {
+
+	if (clock_gettime(CLOCK_MONOTONIC, &start_time) != 0) {
+		printf("start timestamp fail");
+		return 0;
+	}
 	(void)argc;
 	(void)argv;
 	distance_detector_resources_t resources = {0};
-	fileptr = fopen("IQ_data_collection_waving_hand_3_right_to_left.txt", "w");
+	fileptr = fopen("IQ_data_collection_sample.txt", "w");
 	FILE *fleptr;
-	struct timespec start_time;
 	struct timespec curr_time;
 	printf("Acconeer software version %s\n", acc_version_get());
 
@@ -282,19 +293,15 @@ int main(int argc, char *argv[])
 		cleanup(&resources);
 		return EXIT_FAILURE;
 	}
-	if (clock_gettime(CLOCK_MONOTONIC, &start_time) != 0) {
-		printf("start timestamp fail");
-		return 0;
-	}
-		if (clock_gettime(CLOCK_MONOTONIC, &curr_time) != 0) {
-		printf("start timestamp fail");
+	if (clock_gettime(CLOCK_MONOTONIC, &curr_time) != 0) {
+		printf("current timestamp fail");
 		return 0;
 	}
 	struct timespec temp;
 	struct timespec elapsed = getElapsedTime(start_time, curr_time);
 	double elapsedTime = (elapsed.tv_sec + (double)elapsed.tv_nsec) / 1000000000.0;
 	printf("elapsed seconds: %.6f \n elapsed nanoseconds: %.6f \n", elapsed.tv_sec, (double)elapsed.tv_nsec);
-	while (elapsedTime < 10)
+	while (elapsedTime < 5.0)
 	{
 		acc_detector_distance_result_t result = {0};
 

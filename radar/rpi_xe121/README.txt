@@ -7,3 +7,8 @@ development.
 For more documentation please visit https://docs.acconeer.com/ or https://developer.acconeer.com
 
 To view release notes use the following link: https://developer.acconeer.com/home/a121-docs-software/a121-sw-release-notes/
+
+
+// xe121 dimensions:
+roughly 6.7 mm long
+roughly 6.5mm high

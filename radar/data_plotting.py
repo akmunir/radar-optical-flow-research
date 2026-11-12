@@ -28,9 +28,11 @@ def plotSubSweeps(f):
                     distance += chars[y]
                     #print(distance)
                 distanceXAxis.append(float(distance.strip()))
-                i = x.rfind(', ')
-                amplitude += chars[i + 2]
-                amplitude += chars[i + 3]
+                i = x.rfind(']')
+                i += 3
+                while chars[i] != ',':
+                    amplitude += chars[i]
+                    i += 1
                 print(amplitude)
                 amplitudeYAxis.append(int(amplitude.strip()))
                 index += 1
@@ -38,8 +40,9 @@ def plotSubSweeps(f):
                 amplitude = ""
                 
             
-plotSubSweeps("./IQ_data_collection_no_motion_sample.txt");
+plotSubSweeps("./IQ_data_collection_sample.txt");
 f = "./IQ_data_collection_sample_subsweeps.png"
+plt.legend()
 plt.savefig(f, dpi=300)
 
 # for distance in distanceXAxis:
