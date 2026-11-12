@@ -293,7 +293,7 @@ int main(int argc, char *argv[])
 	struct timespec elapsed = getElapsedTime(start_time, curr_time);
 	double elapsedTime = (elapsed.tv_sec + (double)elapsed.tv_nsec) / 1000000000.0;
 	printf("elapsed seconds: %.6f \n elapsed nanoseconds: %.6f \n", elapsed.tv_sec, (double)elapsed.tv_nsec);
-	while (elapsedTime < 50.0)
+	while (elapsedTime < 10)
 	{
 		acc_detector_distance_result_t result = {0};
 
@@ -335,7 +335,7 @@ int main(int argc, char *argv[])
 			return 0;
 		}
 		elapsed = getElapsedTime(start_time, curr_time);
-		elapsedTime += (elapsed.tv_sec + (double)elapsed.tv_nsec) / 10000000000.0;
+		elapsedTime = elapsed.tv_sec + (elapsed.tv_nsec / 1000000000.0);
 		printf("elapsed total: %.6fs \n", elapsedTime);
 	}
 
