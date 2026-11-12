@@ -1,8 +1,9 @@
 import matplotlib.pyplot as plt
 import io
+import numpy as np
 
 
-plt.xlabel("Distance (m)")
+plt.xlabel("Distance (cm)")
 plt.ylabel("Amplitude")
 
 def plotSubSweeps(f):
@@ -15,10 +16,13 @@ def plotSubSweeps(f):
     with open(f) as file: 
         for x in file:
             chars = [*x]
-            if (chars[2] == 'd'):
+            if chars[2] == 'd' or chars[0] == 'E':
                 break
+            if (chars[0] == 'B'):
+                print("new sweep")
             if (chars[0] == 'S'):
                 subsweepIndex += 1
+                # plt.plot(distanceXAxis, amplitudeYAxis)
                 plt.plot(distanceXAxis, amplitudeYAxis, label="Subsweep " + str(subsweepIndex))
                 distanceXAxis = []
                 amplitudeYAxis = []
@@ -40,9 +44,12 @@ def plotSubSweeps(f):
                 amplitude = ""
                 
             
-plotSubSweeps("./IQ_data_collection_sample.txt");
-f = "./IQ_data_collection_sample_subsweeps.png"
+plotSubSweeps("./IQ_data_collection_initial_stationary_pendulum_measurement.txt");
+f = "./IQ_data_collection_initial_stationary_pendulum_measurement.png"
 plt.legend()
+plt.title("Single Sweep")
+plt.xlim(0, 0.6)
+plt.xticks(np.arange(0, 0.61, 0.05))
 plt.savefig(f, dpi=300)
 
 # for distance in distanceXAxis:

@@ -114,7 +114,7 @@ static void print_iq_data(const acc_config_t        *sensor_config,
 	uint16_t sweep_length     = processing_metadata->frame_data_length / sweeps_per_frame;
 	struct timespec timestamp;
 	printf("BEGIN:Distance(m), [Frame], Amplitude\n");
-	fprintf(fileptr, "BEGIN:Distance(m), [Frame], Amplitude\n" );
+	fprintf(fileptr, "BEGIN:Distance(m), [Frame], Amplitude, Timestamp\n" );
 
 	/* Loop over all subsweeps */
 	for (uint8_t subsweep_idx = 0; subsweep_idx < num_subsweeps; subsweep_idx++)
@@ -179,7 +179,7 @@ static void print_iq_data(const acc_config_t        *sensor_config,
 
 		}
 		//fprintf("Subsweep ID: %i", subsweep_idx);
-		fprintf(fileptr, "Sweep end\n");
+		fprintf(fileptr, "Subsweep end\n");
 	}
 
 	printf("END:Distance(m), [Frame], Amplitude, Timestamp\n");
@@ -234,7 +234,7 @@ int main(int argc, char *argv[])
 	(void)argc;
 	(void)argv;
 	distance_detector_resources_t resources = {0};
-	fileptr = fopen("IQ_data_collection_sample.txt", "w");
+	fileptr = fopen("IQ_data_collection_initial_stationary_pendulum_measurement.txt", "w");
 	FILE *fleptr;
 	struct timespec curr_time;
 	printf("Acconeer software version %s\n", acc_version_get());
@@ -301,7 +301,7 @@ int main(int argc, char *argv[])
 	struct timespec elapsed = getElapsedTime(start_time, curr_time);
 	double elapsedTime = (elapsed.tv_sec + (double)elapsed.tv_nsec) / 1000000000.0;
 	printf("elapsed seconds: %.6f \n elapsed nanoseconds: %.6f \n", elapsed.tv_sec, (double)elapsed.tv_nsec);
-	while (elapsedTime < 5.0)
+	while (elapsedTime < 2.5)
 	{
 		acc_detector_distance_result_t result = {0};
 
@@ -381,8 +381,8 @@ static void set_config(acc_detector_distance_config_t *detector_config, distance
 			break;
 
 		case DISTANCE_PRESET_CONFIG_BALANCED:
-			acc_detector_distance_config_start_set(detector_config, 0.25f);
-			acc_detector_distance_config_end_set(detector_config, 3.0f);
+			acc_detector_distance_config_start_set(detector_config, 0.1f);
+			acc_detector_distance_config_end_set(detector_config, 1.0f);
 			acc_detector_distance_config_max_step_length_set(detector_config, 0U);
 			acc_detector_distance_config_max_profile_set(detector_config, ACC_CONFIG_PROFILE_5);
 			acc_detector_distance_config_reflector_shape_set(detector_config, ACC_DETECTOR_DISTANCE_REFLECTOR_SHAPE_GENERIC);
