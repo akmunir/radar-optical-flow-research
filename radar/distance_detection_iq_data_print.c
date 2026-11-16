@@ -60,7 +60,7 @@ typedef enum
 
 FILE *fileptr;
 struct timespec start_time;
-char *logFile = "test.txt";
+char *logFile = "test2.txt";
 
 typedef struct
 {

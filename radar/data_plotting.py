@@ -4,7 +4,21 @@ import numpy as np
 
 plt.xlabel("Distance (cm)")
 plt.ylabel("Amplitude")
-with open("IQ_data_collection_initial_stationary_pendulum_measurement") as file:
+# with open("copy.txt", "r+", encoding="utf-8") as file:
+#     subsweepIndex = False
+#     print("entered")
+#     with open("new.txt", "w", encoding="utf-8") as f:
+#         for x in file:
+#             chars = [*x]
+#             f.write(x)
+#             if (chars[0] == "B"):
+#                 file.write("subsweep " + str(int(subsweepIndex)) + " start")
+#             if (chars[0] == "s"):
+#                 file.write("subsweep " + str(int(subsweepIndex)) + " end")
+#                 subsweepIndex = not(subsweepIndex)
+#     f.close()
+#     print("closed")
+#     file.close()
 
 def plotSingleSweep(f):
     distance = ""
@@ -22,7 +36,7 @@ def plotSingleSweep(f):
                 print("new sweep")
             if (chars[0] == 'S'):
                 subsweepIndex += 1
-                # plt.plot(distanceXAxis, amplitudeYAxis)
+                #plt.plot(distanceXAxis, amplitudeYAxis)
                 plt.plot(distanceXAxis, amplitudeYAxis, label="Subsweep " + str(subsweepIndex))
                 distanceXAxis = []
                 amplitudeYAxis = []
@@ -46,12 +60,12 @@ def plotSingleSweep(f):
                 index += 1
                 distance = ""
                 amplitude = ""
-    f = "./test_plot.png"
-    #plt.legend()
+    f = "./test2_plot.png"
+    plt.legend()
     plt.plot(distanceXAxis, amplitudeYAxis)
     plt.title("Single Sweep")
-    plt.xlim(0, 0.6)
-    plt.xticks(np.arange(0, 0.61, 0.05))
+    plt.xlim(0, 1.0)
+    plt.xticks(np.arange(0, 1.0, 0.05))
     plt.savefig(f, dpi=300)
 
 def plotSweepsAvg(f):
@@ -97,7 +111,7 @@ def plotSweepsAvg(f):
                 #index += 1
                 distance = ""
                 amplitude = ""
-    f = "./test_all_sweeps_plot.png"
+    f = "./test2_all_sweeps_plot.png"
     xAxis = []
     yAxis = []
     for key, value in subsweep0.items():
@@ -106,15 +120,15 @@ def plotSweepsAvg(f):
 
     plt.plot(xAxis, yAxis)
     plt.title("Mean Subsweep0")
-    plt.xlim(0, 0.6)
-    plt.xticks(np.arange(0, 0.61, 0.05))
+    plt.xlim(0, 1.0)
+    plt.xticks(np.arange(0, 1.0, 0.05))
     plt.savefig(f, dpi=300)
                 
                 
-plotSingleSweep("./test.txt");        
+plotSingleSweep("./test2.txt");        
 #plotSingleSweep("./IQ_data_collection_initial_stationary_pendulum_measurement.txt");
 plt.clf()
-plotSweepsAvg("./test.txt")
+plotSweepsAvg("./test2.txt")
 
 
 # for distance in distanceXAxis:
