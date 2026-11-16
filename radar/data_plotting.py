@@ -2,8 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-plt.xlabel("Distance (cm)")
-plt.ylabel("Amplitude")
+
 # with open("copy.txt", "r+", encoding="utf-8") as file:
 #     subsweepIndex = False
 #     print("entered")
@@ -34,9 +33,11 @@ def plotSingleSweep(f):
                 break
             if (chars[0] == 'B'):
                 print("new sweep")
-            if (chars[0] == 'S'):
+            if (chars[0] == 's'):
                 subsweepIndex += 1
                 #plt.plot(distanceXAxis, amplitudeYAxis)
+                # print(distanceXAxis)
+                # print(amplitudeYAxis)
                 plt.plot(distanceXAxis, amplitudeYAxis, label="Subsweep " + str(subsweepIndex))
                 distanceXAxis = []
                 amplitudeYAxis = []
@@ -60,9 +61,11 @@ def plotSingleSweep(f):
                 index += 1
                 distance = ""
                 amplitude = ""
+    plt.xlabel("Distance (cm)")
+    plt.ylabel("Amplitude")
     f = "./test2_plot.png"
     plt.legend()
-    plt.plot(distanceXAxis, amplitudeYAxis)
+    #plt.plot(distanceXAxis, amplitudeYAxis)
     plt.title("Single Sweep")
     plt.xlim(0, 1.0)
     plt.xticks(np.arange(0, 1.0, 0.05))
@@ -82,7 +85,7 @@ def plotSweepsAvg(f):
         for x in file:
             chars = [*x]
             if chars[2] == 'd' or chars[0] == 'E':
-                continue
+                break
             if (chars[9].isdigit()):
                 subsweepIndex = int(chars[9])
             if chars[0].isdigit():
@@ -118,10 +121,12 @@ def plotSweepsAvg(f):
         xAxis.append(key)
         yAxis.append(np.mean(value))
 
+    plt.xlabel("Distance (cm)")
+    plt.ylabel("Amplitude")
     plt.plot(xAxis, yAxis)
     plt.title("Mean Subsweep0")
-    plt.xlim(0, 1.0)
-    plt.xticks(np.arange(0, 1.0, 0.05))
+    plt.xlim(0, 0.65)
+    plt.xticks(np.arange(0, 0.65, 0.05))
     plt.savefig(f, dpi=300)
                 
                 
