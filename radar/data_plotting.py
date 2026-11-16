@@ -5,7 +5,7 @@ import numpy as np
 
 plt.xlabel("Distance (cm)")
 plt.ylabel("Amplitude")
-
+with open("IQ_data_collection_initial_stationary_pendulum_measurement") as file:
 
 def plotSingleSweep(f):
     distance = ""
