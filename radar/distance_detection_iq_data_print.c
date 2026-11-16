@@ -60,6 +60,7 @@ typedef enum
 
 FILE *fileptr;
 struct timespec start_time;
+char *logFile = "test.txt";
 
 typedef struct
 {
@@ -119,6 +120,7 @@ static void print_iq_data(const acc_config_t        *sensor_config,
 	/* Loop over all subsweeps */
 	for (uint8_t subsweep_idx = 0; subsweep_idx < num_subsweeps; subsweep_idx++)
 	{
+		fprintf(fileptr, "subsweep %i start\n", subsweep_idx);
 		/* Get information about the start point and step length from the sensor config */
 		int32_t  start_point = acc_config_subsweep_start_point_get(sensor_config, subsweep_idx);
 		uint16_t step_length = acc_config_subsweep_step_length_get(sensor_config, subsweep_idx);
@@ -179,7 +181,7 @@ static void print_iq_data(const acc_config_t        *sensor_config,
 
 		}
 		//fprintf("Subsweep ID: %i", subsweep_idx);
-		fprintf(fileptr, "Subsweep end\n");
+		fprintf(fileptr, "subsweep %i end\n", subsweep_idx);
 	}
 
 	printf("END:Distance(m), [Frame], Amplitude, Timestamp\n");
@@ -234,7 +236,7 @@ int main(int argc, char *argv[])
 	(void)argc;
 	(void)argv;
 	distance_detector_resources_t resources = {0};
-	fileptr = fopen("IQ_data_collection_initial_stationary_pendulum_measurement.txt", "w");
+	fileptr = fopen(logFile, "w");
 	FILE *fleptr;
 	struct timespec curr_time;
 	printf("Acconeer software version %s\n", acc_version_get());
