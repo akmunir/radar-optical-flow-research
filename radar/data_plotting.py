@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.signal import find_peaks
 
-fileName = "./output/t2_raw_data"
+fileName = "./output/t1_recorded_threshold_raw_data"
 
 def plotSingleSweep(f):
     distance = ""
@@ -137,7 +137,7 @@ def plotSweepsAvg(f):
     axs[1].set_xticks(np.arange(0, 1.5, 0.1)) 
     axs[1].plot(x1Axis, y1Axis, color="orange")
     axs[1].set_title("Mean Subsweep 1")
-    points = find_peaks(y1Axis, height = 100)
+    points = find_peaks(y1Axis, height = 50)
     for i in points[0]: 
         axs[1].plot(x1Axis[i], y1Axis[i], "x", color="red")
         axs[1].annotate(
@@ -148,7 +148,7 @@ def plotSweepsAvg(f):
     )
     plt.tight_layout()
     plt.savefig(f, dpi=300)
-                
+## 33.6 cm
 
 #plotSingleSweep("./test2.txt");        
 #plotSingleSweep("./IQ_data_collection_initial_stationary_pendulum_measurement.txt");
