@@ -132,11 +132,15 @@ def plotSweepsAvg(f):
     )
     axs[0].plot(x0Axis, y0Axis)
     axs[0].set_title("Mean Subsweep 0")
+    axs[0].set_xlabel("Distance (cm)")
+    axs[0].set_ylabel("Amplitude")
     maxAmplitude = np.max(y1Axis);
     axs[1].set_yticks(np.arange(0, maxAmplitude + 50, 25))
     axs[1].set_xticks(np.arange(0, 1.5, 0.1)) 
     axs[1].plot(x1Axis, y1Axis, color="orange")
     axs[1].set_title("Mean Subsweep 1")
+    axs[1].set_xlabel("Distance (cm)")
+    axs[1].set_ylabel("Amplitude")
     points = find_peaks(y1Axis, height = 50)
     for i in points[0]: 
         axs[1].plot(x1Axis[i], y1Axis[i], "x", color="red")
