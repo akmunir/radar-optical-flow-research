@@ -1,23 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.signal import find_peaks
 
-
-
-# with open("copy.txt", "r+", encoding="utf-8") as file:
-#     subsweepIndex = False
-#     print("entered")
-#     with open("new.txt", "w", encoding="utf-8") as f:
-#         for x in file:
-#             chars = [*x]
-#             f.write(x)
-#             if (chars[0] == "B"):
-#                 file.write("subsweep " + str(int(subsweepIndex)) + " start")
-#             if (chars[0] == "s"):
-#                 file.write("subsweep " + str(int(subsweepIndex)) + " end")
-#                 subsweepIndex = not(subsweepIndex)
-#     f.close()
-#     print("closed")
-#     file.close()
+fileName = "./output/t2_raw_data"
 
 def plotSingleSweep(f):
     distance = ""
@@ -90,8 +75,6 @@ def plotSweepsAvg(f):
                 subsweepIndex = int(chars[9])
             if chars[0].isdigit():
                 #print("passed check")
-                if (subsweepIndex != 0):
-                    continue
                 for y in range(8):
                     distance += chars[y]
                 if (float(distance) < 0.1):
@@ -99,7 +82,10 @@ def plotSweepsAvg(f):
                     amplitude = ""
                     continue
                 #print(float(distance))
-                subsweep0.setdefault(float(distance), [])
+                if (subsweepIndex == 0):
+                    subsweep0.setdefault(float(distance), [])
+                if (subsweepIndex == 1):
+                    subsweep1.setdefault(float(distance), [])
                 #print(subsweep0.keys())
                     #print(distance)
                 #distanceXAxis.append(float(distance.strip()))
@@ -109,32 +95,66 @@ def plotSweepsAvg(f):
                     amplitude += chars[i]
                     i += 1
                 print(amplitude)
-                subsweep0[float(distance)].append(int(amplitude.strip()))
+                if (subsweepIndex == 0):
+                    subsweep0[float(distance)].append(int(amplitude.strip()))
+                if (subsweepIndex == 1):
+                    subsweep1[float(distance)].append(int(amplitude.strip()))
                 #amplitudeYAxis.append(int(amplitude.strip()))
                 #index += 1
                 distance = ""
                 amplitude = ""
-    f = "./test2_all_sweeps_plot.png"
-    xAxis = []
-    yAxis = []
+    f = fileName + "_plot.png"
+    x0Axis = []
+    y0Axis = []
+    x1Axis = []
+    y1Axis = []
     for key, value in subsweep0.items():
-        xAxis.append(key)
-        yAxis.append(np.mean(value))
+        x0Axis.append(key)
+        y0Axis.append(np.mean(value))
 
-    plt.xlabel("Distance (cm)")
-    plt.ylabel("Amplitude")
-    plt.plot(xAxis, yAxis)
-    plt.title("Mean Subsweep0")
-    plt.xlim(0, 0.65)
-    plt.xticks(np.arange(0, 0.65, 0.05))
+    for key, value in subsweep1.items():
+            x1Axis.append(key)
+            y1Axis.append(np.mean(value))
+
+    plt.figure(1)
+    fig, axs = plt.subplots(2, 1, figsize=(10, 6))
+    maxAmplitude = np.max(y0Axis);
+    axs[0].set_yticks(np.arange(0, maxAmplitude + 20, 10))
+    axs[0].set_xticks(np.arange(0, 1.5, 0.1))
+    points = find_peaks(y0Axis, height = 25)
+    for i in points[0]: 
+        axs[0].plot(x0Axis[i], y0Axis[i], "x", color="red")
+        axs[0].annotate(
+        "(" + str((f"{x0Axis[i]:.2f}")) + "," + str((f"{y0Axis[i]:.0f}")) + ")", 
+        xy=(x0Axis[i], y0Axis[i]), 
+        xytext=(5, -5), 
+        textcoords="offset points"
+    )
+    axs[0].plot(x0Axis, y0Axis)
+    axs[0].set_title("Mean Subsweep 0")
+    maxAmplitude = np.max(y1Axis);
+    axs[1].set_yticks(np.arange(0, maxAmplitude + 50, 25))
+    axs[1].set_xticks(np.arange(0, 1.5, 0.1)) 
+    axs[1].plot(x1Axis, y1Axis, color="orange")
+    axs[1].set_title("Mean Subsweep 1")
+    points = find_peaks(y1Axis, height = 100)
+    for i in points[0]: 
+        axs[1].plot(x1Axis[i], y1Axis[i], "x", color="red")
+        axs[1].annotate(
+        "(" + str((f"{x1Axis[i]:.2f}")) + "," + str((f"{y1Axis[i]:.0f}")) + ")", 
+        xy=(x1Axis[i], y1Axis[i]), 
+        xytext=(5, -5), 
+        textcoords="offset points"
+    )
+    plt.tight_layout()
     plt.savefig(f, dpi=300)
                 
-                
-plotSingleSweep("./test2.txt");        
+
+#plotSingleSweep("./test2.txt");        
 #plotSingleSweep("./IQ_data_collection_initial_stationary_pendulum_measurement.txt");
 plt.clf()
-plotSweepsAvg("./test2.txt")
-
+plotSweepsAvg(fileName + ".txt")
+# distance from bob to pendulum is roughly 34.3 cm
 
 # for distance in distanceXAxis:
 #     print(distance)
