@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.signal import find_peaks
 
-fileName = "./output/t1_recorded_threshold_raw_data"
+fileName = "./output/t5_raw_data"
 
 def plotSingleSweep(f):
     distance = ""
