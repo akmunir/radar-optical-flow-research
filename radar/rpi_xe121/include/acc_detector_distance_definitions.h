@@ -47,6 +47,7 @@ typedef enum
 	ACC_DETECTOR_DISTANCE_THRESHOLD_METHOD_FIXED_STRENGTH,
 	/*! Compares processed data against a recorded threshold */
 	ACC_DETECTOR_DISTANCE_THRESHOLD_METHOD_RECORDED,
+	
 	/*! Uses the CFAR algorithm as a threshold */
 	ACC_DETECTOR_DISTANCE_THRESHOLD_METHOD_CFAR
 } acc_detector_distance_threshold_method_t;
