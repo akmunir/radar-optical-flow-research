@@ -3,7 +3,7 @@ import numpy as np
 from scipy.signal import find_peaks
 import math
 
-fileName = "./output/t1_data"
+fileName = "./output/t1_data_v7_bob_47cm"
 
 x0Axis = []
 x1Axis = []
@@ -134,8 +134,8 @@ def plotSweepsAvg(f, baselineSubsweep0, baselineSubsweep1):
     plt.figure(1)
     fig, axs = plt.subplots(2, 1, figsize=(10, 6))
     maxAmplitude = np.max(y0Axis);
-    axs[0].set_yticks(np.arange(0, maxAmplitude + 20, 10))
-    axs[0].set_xticks(np.arange(0, 1.5, 0.1))
+    #axs[0].set_yticks([0, 10, 20, 30, 40, 50, 60, 70, 80])
+    #axs[0].set_xticks(np.arange(0, 1.5, 0.1))
     points = find_peaks(y0Axis, height = 50)
     for i in points[0]: 
         axs[0].plot(x0Axis[i], y0Axis[i], "x", color="red")
@@ -150,11 +150,12 @@ def plotSweepsAvg(f, baselineSubsweep0, baselineSubsweep1):
     axs[0].set_xlabel("Distance (cm)")
     axs[0].set_ylabel("Amplitude")
     maxAmplitude = np.max(y1Axis);
-    axs[1].set_yticks(np.arange(0, maxAmplitude + 50, 25))
-    axs[1].set_xticks(np.arange(0, 1.5, 0.1)) 
+    #axs[1].set_yticks([0, 10, 20, 30, 40, 50, 60, 70, 80])
+    #axs[1].set_xticks(np.arange(0, 150, 10)) 
+    #axs[1].set_xticks([0, 10, 20, 30, 40]) 
     axs[1].plot(x1Axis, y1Axis, color="orange")
     axs[1].set_title("Mean Subsweep 1")
-    axs[1].set_xlabel("Distance (m)")
+    axs[1].set_xlabel("Distance (cm)")
     axs[1].set_ylabel("Amplitude")
     points = find_peaks(y1Axis, height = 50)
     for i in points[0]: 
@@ -184,17 +185,21 @@ def getMeanIQValues(subsweep):
     for key, value in subsweep.items():
         temp.setdefault(key, [])
         for IQVal in value:
+            iTermforPhasecalc = 0
             if (IQVal.rfind("+") == -1):
                 i = IQVal.rfind("-")
+                iTermforPhasecalc = int(IQVal[0:i]) 
                 iTerm += int(IQVal[0:i])
                 TermCounter += 1
                 #print(IQVal[0:i])
             else:
                 i = IQVal.rfind("+")
                 TermCounter += 1;  
+                iTermforPhasecalc = int(IQVal[0:i])   
                 iTerm += int(IQVal[0:i])   
                 #print(IQVal[0: i])   
             QTerm += int(IQVal[i: len(IQVal) - 1])
+            QTermForPhaseCalcint = int(IQVal[i: len(IQVal) - 1])
         temp[key].append(iTerm / TermCounter)
         temp[key].append(QTerm / TermCounter)
         TermCounter = 0
@@ -203,7 +208,7 @@ def getMeanIQValues(subsweep):
     #print(temp.items())
     return temp
 plt.clf()
-base0, base1 = getBaselineSweep("./output/t1_data_empty_scene.txt")
+base0, base1 = getBaselineSweep("./output/t1_data_v7_empty_scene.txt")
 plotSweepsAvg(fileName + ".txt",  base0, base1)
 #print("b: " + str(len(baselineY0Axis)))
 

@@ -60,7 +60,7 @@ typedef enum
 
 FILE *fileptr;
 struct timespec start_time;
-char *logFile = "./output/t1_data_empty_scene.txt";
+char *logFile = "./output/t1_data_v7_empty_scene.txt";
 
 typedef struct
 {
@@ -112,6 +112,7 @@ static void print_iq_data(const acc_config_t        *sensor_config,
 	/* Get information about the frame from the sensor config */
 	uint16_t sweeps_per_frame = acc_config_sweeps_per_frame_get(sensor_config);
 	uint8_t  num_subsweeps    = acc_config_num_subsweeps_get(sensor_config);
+	num_subsweeps    = 2;
 	uint16_t sweep_length     = processing_metadata->frame_data_length / sweeps_per_frame;
 	struct timespec timestamp;
 	printf("BEGIN:Distance(m), [Frame], Amplitude\n");
@@ -228,7 +229,6 @@ void initializeOutputFile() {
 
 int main(int argc, char *argv[])
 {
-
 	if (clock_gettime(CLOCK_MONOTONIC, &start_time) != 0) {
 		printf("start timestamp fail");
 		return 0;
@@ -257,6 +257,8 @@ int main(int argc, char *argv[])
 	}
 
 	set_config(resources.config, DISTANCE_PRESET_CONFIG_BALANCED);
+	
+
 
 	if (!initialize_detector_resources(&resources))
 	{
@@ -303,7 +305,7 @@ int main(int argc, char *argv[])
 	struct timespec elapsed = getElapsedTime(start_time, curr_time);
 	double elapsedTime = (elapsed.tv_sec + (double)elapsed.tv_nsec) / 1000000000.0;
 	printf("elapsed seconds: %.6f \n elapsed nanoseconds: %.6f \n", elapsed.tv_sec, (double)elapsed.tv_nsec);
-	while (elapsedTime < 10.0)
+	while (elapsedTime < 5.0)
 	{
 		acc_detector_distance_result_t result = {0};
 
@@ -385,14 +387,15 @@ static void set_config(acc_detector_distance_config_t *detector_config, distance
 		case DISTANCE_PRESET_CONFIG_BALANCED:
 			acc_detector_distance_config_start_set(detector_config, 0.1f);
 			acc_detector_distance_config_end_set(detector_config, 1.0f);
-			acc_detector_distance_config_max_step_length_set(detector_config, 0U);
-			acc_detector_distance_config_max_profile_set(detector_config, ACC_CONFIG_PROFILE_3);
+			acc_detector_distance_config_max_step_length_set(detector_config, 24U);
+			acc_detector_distance_config_max_profile_set(detector_config, ACC_CONFIG_PROFILE_5);
 			acc_detector_distance_config_reflector_shape_set(detector_config, ACC_DETECTOR_DISTANCE_REFLECTOR_SHAPE_GENERIC);
 			acc_detector_distance_config_peak_sorting_set(detector_config, ACC_DETECTOR_DISTANCE_PEAK_SORTING_STRONGEST);
 			acc_detector_distance_config_threshold_method_set(detector_config, ACC_DETECTOR_DISTANCE_THRESHOLD_METHOD_RECORDED);
 			acc_detector_distance_config_threshold_sensitivity_set(detector_config, 0.5f);
 			acc_detector_distance_config_signal_quality_set(detector_config, 15.0f);
 			acc_detector_distance_config_close_range_leakage_cancellation_set(detector_config, false);
+			
 			break;
 	}
 }
